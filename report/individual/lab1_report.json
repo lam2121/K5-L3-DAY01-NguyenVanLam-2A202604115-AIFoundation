@@ -48,7 +48,7 @@
   "tính tay: baseline_accuracy": true,
   "tính tay: sigmoid_0": true,
   "tính tay: f1_example": true,
-  "tính tay: cosine_example": false,
+  "tính tay: cosine_example": true,
   "tính tay: llm_cost_per_day": true
  },
  "experiments": [
