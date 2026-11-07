@@ -4,8 +4,6 @@
 - **Họ và tên:** Nguyễn Văn Lâm
 - **SEED:** 5103
 
-> Ghi chú: Mọi số liệu lấy từ output trong `day01_lab.ipynb` và `lab1_report.json`. Chỗ nào suy ra bằng phép tính từ các số đó thì ghi rõ. LLM dùng trong bài lab là Claude Haiku 5.5 (model nhỏ) và Claude Opus 5.5 (model lớn).
-
 ## 1. Bằng chứng day01_lab
 
 | Tệp | Có? | Ghi chú |
