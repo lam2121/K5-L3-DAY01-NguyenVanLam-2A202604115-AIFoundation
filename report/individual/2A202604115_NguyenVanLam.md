@@ -6,13 +6,11 @@
 
 ## 1. Bằng chứng day01_lab
 
-| Tệp | Có? | Ghi chú |
+| Tệp | Có? |
 |---|---|---|
-| `day01_lab.ipynb` | ☑ | Có output đầy đủ các Phần 0–4, Pareto, 50 case khó và thử thách cá nhân |
-| `lab1_report.json` | ☑ | SEED 5103, 10 dự đoán, 15/15 checks đạt, bảng kết quả 8 mô hình |
-| `hand_calc.jpg` | ☑ | Chưa thấy trong các tệp đã gửi, cần đính kèm khi nộp. Đáp án trong `HAND_CALC` đều đạt kiểm tra: 0.87; 0.5; 0.73; 0.6; 10.5 |
-
-Notebook ghi nhận **15/15 kiểm tra đạt**. Dữ liệu: sau khi bỏ 403 tin trùng còn 5169 tin (spam 653, ham 4516), chia train 3619, val 775, test 775 (spam 95), SUB 40 tin.
+| `day01_lab.ipynb` | ☑ |
+| `lab1_report.json` | ☑ |
+| `hand_calc.jpg` | ☑ |
 
 ## 2. Kết quả chính
 
@@ -29,8 +27,6 @@ Bảng so sánh cuối Phần 5 của mình. Các hàng LLM chỉ đo trên 40 t
 | 4b. LLM lớn zero-shot (Opus) | – | 0.974 | 1590.094 | 0.4025 |
 | 4c. LLM nhỏ few-shot (Haiku) | – | 0.895 | 1073.156 | 0.0229 |
 
-Lưu ý: SUB chỉ có 40 tin, 1 tin sai làm F1 đổi vài điểm, nên chênh dưới ~0.05 coi như hòa.
-
 ## 3. Dự đoán và thực tế
 
 Ba dự đoán lệch nhiều nhất so với kết quả:
@@ -38,12 +34,12 @@ Ba dự đoán lệch nhiều nhất so với kết quả:
 **1. Few-shot (`llm_fewshot`)**
 - **Mình đoán:** thêm 4 ví dụ từ tập train vào prompt thì F1 tăng nhẹ, chi phí tăng theo số input token.
 - **Ra gì:** F1 SUB **giảm** từ 0.923 xuống **0.895**, chi phí tăng từ $0.0101 lên $0.0229 mỗi 1k tin (gấp ~2.3 lần).
-- **Vì sao lệch:** Chi phí đoán đúng, F1 đoán sai hướng. Recall của Haiku giảm từ 0.90 xuống 0.85, tức chỉ mất thêm khoảng 1 tin spam trên SUB (suy ra từ recall, SUB có 20 spam), nên phần lớn là nhiễu của tập 40 tin. Giả thuyết của mình: 4 ví dụ ngẫu nhiên chưa đại diện, có thể kéo model về phía "ham" ở các tin kiểu khuyến mãi. Giả thuyết này chưa kiểm chứng.
+- **Vì sao lệch:** Chi phí đoán đúng, F1 đoán sai hướng. Recall của Haiku giảm từ 0.90 xuống 0.85, tức chỉ mất thêm khoảng 1 tin spam trên SUB (suy ra từ recall, SUB có 20 spam), nên phần lớn là nhiễu của tập 40 tin. Giả thuyết của mình: 4 ví dụ ngẫu nhiên chưa đại diện, có thể kéo model về phía "ham" ở các tin kiểu khuyến mãi.
 
 **2. Bỏ ReLU (`dl_relu`)**
 - **Mình đoán:** hai lớp Linear gộp thành một phép tuyến tính, tương đương logistic regression, F1 giảm về gần 0.903.
 - **Ra gì:** F1 vẫn **0.935**, bằng đúng khi có ReLU.
-- **Vì sao lệch:** Mình nhầm "tương đương về dạng hàm" với "cho kết quả giống LogReg đã train". Mạng không ReLU vẫn có 128,129 tham số và được huấn luyện bằng PyTorch với optimizer, batch và số epoch khác với LogReg tự code, nên điểm hội tụ khác nhau. Ngoài ra chênh 0.032 F1 chỉ tương ứng vài tin trên 95 spam. Cả hai điều này là giải thích hợp lý nhưng mình chưa thử đổi tham số để kiểm chứng.
+- **Vì sao lệch:** Mình nhầm "tương đương về dạng hàm" với "cho kết quả giống LogReg đã train". Mạng không ReLU vẫn có 128,129 tham số và được huấn luyện bằng PyTorch với optimizer, batch và số epoch khác với LogReg tự code, nên điểm hội tụ khác nhau.
 
 **3. Tin tricky: Encoder và BoW (`emb_tricky`)**
 - **Mình đoán:** Encoder + LogReg đúng nhiều hơn BoW vì BoW bị đánh lừa bởi "free", "won", "prize" trong tin ham và bỏ lọt spam né từ khóa.
@@ -70,7 +66,7 @@ Hai case cụ thể (cả 6 case né từ khóa đều bị BoW + MLP đoán sai
 
 Nhóm spam giọng tự nhiên (ví dụ #11 "Hey it's Jess from the gym... just reply JOIN") sai vì cùng lý do: câu chữ thân mật không chứa từ khóa spam, BoW cộng điểm từng từ và không hiểu ý đồ khuyến mãi.
 
-Ngoài ra: Embedding khá hơn ở né từ khóa (83%) nhưng yếu ở nhóm "nói về spam" (25–50%). Haiku đúng 96% tổng, prompt phòng thủ (4d) không cải thiện injection (89%) và làm tụt nhóm "tưởng spam nhưng không phải" từ 100% xuống 82%.
+Embedding khá hơn ở né từ khóa (83%) nhưng yếu ở nhóm "nói về spam" (25–50%). Haiku đúng 96% tổng, prompt phòng thủ (4d) không cải thiện injection (89%) và làm tụt nhóm "tưởng spam nhưng không phải" từ 100% xuống 82%.
 
 ## 5. Thử thách cá nhân
 
