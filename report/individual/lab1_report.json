@@ -3,35 +3,43 @@
  "predictions": {
   "ml_f1": {
    "text": "F1 ~0.89, precision sẽ thường cao hơn recall 1 chút vì baseline lười ở trên đã ~0.8737 với các thư spam chỉ có 95 thư có các từ ngữ rất đặc trưng nên Bow rất dễ bắt",
-   "time": "16:31:31"
+   "time": "11:22:18"
   },
   "ml_lr": {
    "text": "lr-0.001 thì mỗi lần cập nhật thì trọng số giảm rất ít, đường loss gần như chỉ đi ngang giảm rất chậm, có khi chạy hết epoch nhưng chưa hội tụ, lr = 50 thì mỗi lần cập nhật trọng số bị đẩy quá xa nên mô hình vượt qua điểm thấp nhất xong lại đi ngược lại, đường loss dao động mạnh có dạng zic zac, lúc lên lúc xuống",
-   "time": "16:31:42"
+   "time": "11:22:26"
   },
   "dl_curve": {
    "text": "val loss sẽ không giảm mãi, nó sẽ giảm xong đi ngang rồi tăng nhẹ, MLP sẽ gần như bằng logistic regression về F1, vì feature vẫn là bag-of-words gần như tách tuyến tính",
-   "time": "16:32:07"
+   "time": "11:23:04"
   },
   "dl_relu": {
    "text": "Nếu xóa ReLU, hai lớp Linear gộp thành một phép tuyến tính duy nhất, tức tương đương logistic regression. Mình dự đoán F1 giảm về khoảng gần bằng logistic regression",
-   "time": "16:32:20"
+   "time": "11:23:16"
   },
   "emb_search": {
    "text": "Theo mình kết quả gần nhất sẽ là spam vì embedding mã hóa ý nghĩa của cả câu chứ không phải từng từ khóa",
-   "time": "16:34:47"
+   "time": "11:25:39"
   },
   "emb_tricky": {
    "text": "Mình dự đoán Encoder + LogReg đúng nhiều hơn BoW. BoW chỉ cộng trọng số từng từ nên bị đánh lừa bởi “free”, “won”, “prize” trong tin ham, và bỏ lọt spam né từ khóa. Encoder mã hóa ý nghĩa cả câu nên phân biệt được ngữ cảnh.",
-   "time": "16:36:23"
+   "time": "11:27:04"
   },
   "llm_models": {
-   "text": "Mình dự đoán Gemini 3.8 Flash sẽ có F1-score cao hơn Gemini 3.5 Flash-Lite, với mức chênh lệch khoảng 1–3%. Tuy nhiên, model lớn cũng sẽ có chi phí cao hơn khoảng 1.5–2.5 lần. Mình kỳ vọng LLM có thể cạnh tranh với mô hình 3B trong bài toán phân loại spam, nhưng mô hình 3B có thể sẽ có lợi thế hơn về tốc độ xử lý và chi phí.",
-   "time": "16:36:29"
+   "text": "1. Mình dự đoán Claude Opus 5.5 sẽ có F1 cao hơn Claude Haiku 5.5 khoảng 1–3%. Vì Opus là model lớn, có khả năng hiểu ngữ cảnh và xử lý những tin nhắn spam phức tạp tốt hơn. Tuy nhiên, bài toán này không quá phức tạp nên mình nghĩ chênh lệch sẽ không quá lớn. 2. Chi phí: Theo bảng giá trong cấu hình, Claude Opus 5.5 có chi phí cao gấp 40 lần Claude Haiku 5.5 ở cả input và output. Vì vậy, nếu cần xử lý nhiều tin nhắn thì Haiku sẽ tiết kiệm hơn đáng kể. 3.So sánh với Embedding: Mình nghĩ LLM chưa chắc sẽ thắng được mô hình 3b (embedding). Vì đây là bài toán phân loại tin nhắn spam tương đối đơn giản, mô hình embedding kết hợp với classifier chuyên biệt có thể cho kết quả tốt, tốc độ nhanh và chi phí thấp hơn.",
+   "time": "11:43:56"
   },
   "llm_fewshot": {
-   "text": "Mình dự đoán khi thêm 4 ví dụ từ tập TRAIN vào prompt, F1-score sẽ tăng nhẹ khoảng 1–3% nhờ model có thêm ví dụ để nhận biết và phân biệt tin nhắn spam với ham. Tuy nhiên, chi phí cho mỗi tin nhắn cũng sẽ tăng khoảng 2–3 lần do số lượng token đầu vào tăng lên.",
-   "time": "16:38:42"
+   "text": "Mình dự đoán khi thêm 4 ví dụ từ tập TRAIN vào prompt, F1-score sẽ tăng nhẹ nhờ model có thêm ví dụ để nhận biết và phân biệt tin nhắn spam với ham. Tuy nhiên, chi phí cho mỗi tin nhắn cũng sẽ tăng tùy vào số lượng input token tăng lên bao nhiêu thì chi phí cũng tăng lên bấy nhiêu do số lượng token đầu vào tăng lên.",
+   "time": "11:50:48"
+  },
+  "tradeoff": {
+   "text": "Đường Pareto gồm BoW + LogReg (nhanh nhất), BoW + MLP, Encoder + MLP head (cân bằng nhất) và Opus (ít lỗi nhất nhưng chậm). kNN, Haiku và few-shot bị lấn át. Haiku, Opus và few-shot nằm bên phải vạch SLA 50 ms (700 đến 1200 ms). Cần thận trọng vì LLM chỉ đo trên 40 tin, chênh dưới 0.05 F1 coi như hòa.",
+   "time": "12:24:11"
+  },
+  "hard_eval": {
+   "text": "Mình dự đoán BoW tụt xuống khoảng 55-65% vì spam né từ khoá và giọng tự nhiên không có từ để cộng điểm, còn từ bị biến đổi (c0ngr4t, fr€€) thì không nằm trong từ điển. Nhóm khó nhất với BoW là spam giọng tự nhiên và né từ khoá. LLM tốt hơn nhiều, nhưng khó nhất với nó là prompt injection vì các tin này nhắm vào chính LLM, trong khi BoW không bị ảnh hưởng.",
+   "time": "12:41:10"
   }
  },
  "checks": {
@@ -54,35 +62,47 @@
  "experiments": [
   {
    "key": "ml_f1",
-   "time": "16:31:31"
+   "time": "11:22:18"
   },
   {
    "key": "ml_lr",
-   "time": "16:31:42"
+   "time": "11:22:26"
   },
   {
    "key": "dl_curve",
-   "time": "16:32:07"
+   "time": "11:23:04"
   },
   {
    "key": "dl_relu",
-   "time": "16:32:20"
+   "time": "11:23:16"
   },
   {
    "key": "emb_search",
-   "time": "16:34:47"
+   "time": "11:25:39"
   },
   {
    "key": "emb_tricky",
-   "time": "16:36:23"
+   "time": "11:27:04"
   },
   {
    "key": "llm_models",
-   "time": "16:36:29"
+   "time": "11:43:57"
   },
   {
    "key": "llm_fewshot",
-   "time": "16:38:44"
+   "time": "11:50:50"
+  },
+  {
+   "key": "tradeoff",
+   "time": "12:24:12"
+  },
+  {
+   "key": "hard_eval",
+   "time": "12:41:12"
+  },
+  {
+   "key": "hard_eval",
+   "time": "13:18:49"
   }
  ],
  "challenge": 3,
@@ -93,10 +113,10 @@
    "recall": 0.8315789473684211,
    "f1": 0.9028571428571428,
    "f1_SUB": 0.8235294117647058,
-   "train_s": 8.855815669998265,
-   "msg_per_s": 7549.692318464916,
-   "p50_ms": 0.062008501117816195,
-   "p95_ms": 1.0415157499664909,
+   "train_s": 7.0385480630000075,
+   "msg_per_s": 13138.97840018681,
+   "p50_ms": 0.052938999999696534,
+   "p95_ms": 0.08964839990426285,
    "usd_per_1k": 0.0
   },
   "2. BoW + MLP (deep learning)": {
@@ -105,10 +125,10 @@
    "recall": 0.9052631578947369,
    "f1": 0.9347826086956522,
    "f1_SUB": 0.9230769230769231,
-   "train_s": 12.444149193997873,
-   "msg_per_s": 23490.700516321373,
-   "p50_ms": 0.3018735005753115,
-   "p95_ms": 0.3529148516463463,
+   "train_s": 11.448980591000009,
+   "msg_per_s": 28294.217216885852,
+   "p50_ms": 0.26472200005400737,
+   "p95_ms": 0.3436562999695524,
    "usd_per_1k": 0.0
   },
   "3a. Encoder (MiniLM) + kNN": {
@@ -117,10 +137,10 @@
    "recall": 0.9368421052631579,
    "f1": 0.9035532994923857,
    "f1_SUB": 0.888888888888889,
-   "train_s": 87.47718009500022,
-   "msg_per_s": 21.95632947132269,
-   "p50_ms": 47.21346200130938,
-   "p95_ms": 65.06056989910576,
+   "train_s": 73.66490219599996,
+   "msg_per_s": 25.15166491998788,
+   "p50_ms": 42.38423000003877,
+   "p95_ms": 57.95638139991295,
    "usd_per_1k": 0.0
   },
   "3b. Encoder (MiniLM) + LogReg": {
@@ -129,10 +149,10 @@
    "recall": 0.9473684210526315,
    "f1": 0.9473684210526315,
    "f1_SUB": 0.9189189189189189,
-   "train_s": 87.9197176939997,
-   "msg_per_s": 30.446567592956907,
-   "p50_ms": 25.322209501609905,
-   "p95_ms": 34.48870629836165,
+   "train_s": 74.11480404500003,
+   "msg_per_s": 32.09263275691537,
+   "p50_ms": 22.41959599996335,
+   "p95_ms": 31.25841620004621,
    "usd_per_1k": 0.0
   },
   "3c. Encoder (MiniLM) + MLP head": {
@@ -141,11 +161,47 @@
    "recall": 0.9473684210526315,
    "f1": 0.9625668449197862,
    "f1_SUB": 0.9189189189189189,
-   "train_s": 88.46627893999903,
-   "msg_per_s": 27.18175457556598,
-   "p50_ms": 34.25328550292761,
-   "p95_ms": 108.99272784863565,
+   "train_s": 74.53293675500004,
+   "msg_per_s": 32.05162634115639,
+   "p50_ms": 22.734024499982297,
+   "p95_ms": 32.512381950004965,
    "usd_per_1k": 0.0
+  },
+  "4a. LLM nhỏ zero-shot": {
+   "accuracy": 0.925,
+   "precision": 0.9473684210526315,
+   "recall": 0.9,
+   "f1": 0.9230769230769231,
+   "f1_SUB": 0.9230769230769231,
+   "train_s": 0.0,
+   "msg_per_s": 1.3512510827690578,
+   "p50_ms": 704.1823939998721,
+   "p95_ms": 1000.0688778999573,
+   "usd_per_1k": 0.010063333333333334
+  },
+  "4b. LLM lớn zero-shot": {
+   "accuracy": 0.975,
+   "precision": 1.0,
+   "recall": 0.95,
+   "f1": 0.9743589743589743,
+   "f1_SUB": 0.9743589743589743,
+   "train_s": 0.0,
+   "msg_per_s": 0.8307197184554026,
+   "p50_ms": 1224.1586659997665,
+   "p95_ms": 1590.0941733500524,
+   "usd_per_1k": 0.4025333333333333
+  },
+  "4c. LLM nhỏ few-shot": {
+   "accuracy": 0.9,
+   "precision": 0.9444444444444444,
+   "recall": 0.85,
+   "f1": 0.8947368421052632,
+   "f1_SUB": 0.8947368421052632,
+   "train_s": 0.0,
+   "msg_per_s": 1.273535613793286,
+   "p50_ms": 736.477082500187,
+   "p95_ms": 1073.1563050499515,
+   "usd_per_1k": 0.02286333333333333
   }
  }
 }
