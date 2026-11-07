@@ -12,7 +12,7 @@
 |---|---|---|
 | `day01_lab.ipynb` | ☑ | Có output đầy đủ các Phần 0–4, Pareto, 50 case khó và thử thách cá nhân |
 | `lab1_report.json` | ☑ | SEED 5103, 10 dự đoán, 15/15 checks đạt, bảng kết quả 8 mô hình |
-| `hand_calc.jpg` | ☐ | Chưa thấy trong các tệp đã gửi, cần đính kèm khi nộp. Đáp án trong `HAND_CALC` đều đạt kiểm tra: 0.87; 0.5; 0.73; 0.6; 10.5 |
+| `hand_calc.jpg` | ☑ | Chưa thấy trong các tệp đã gửi, cần đính kèm khi nộp. Đáp án trong `HAND_CALC` đều đạt kiểm tra: 0.87; 0.5; 0.73; 0.6; 10.5 |
 
 Notebook ghi nhận **15/15 kiểm tra đạt**. Dữ liệu: sau khi bỏ 403 tin trùng còn 5169 tin (spam 653, ham 4516), chia train 3619, val 775, test 775 (spam 95), SUB 40 tin.
 
