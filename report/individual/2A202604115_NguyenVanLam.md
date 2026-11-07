@@ -7,7 +7,7 @@
 ## 1. Bằng chứng day01_lab
 
 | Tệp | Có? |
-|---|---|---|
+|---|---|
 | `day01_lab.ipynb` | ☑ |
 | `lab1_report.json` | ☑ |
 | `hand_calc.jpg` | ☑ |
